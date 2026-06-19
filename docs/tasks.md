@@ -8,12 +8,12 @@
 |------|--------|--------|------|
 | Phase 0: Git 初始化 | 1 | 1 | 100% |
 | Phase 1: 项目骨架 | 2 | 2 | 100% |
-| Phase 2: 领域层 (BrewKit) | 1 | 0 | 0% |
+| Phase 2: 领域层 (BrewKit) | 1 | 1 | 100% |
 | Phase 3: 基础设施层 (BrewShell) | 1 | 0 | 0% |
 | Phase 4: UI 骨架 | 1 | 0 | 0% |
 | Phase 5: 核心页面 | 5 | 0 | 0% |
 | Phase 6: 打包与验证 | 2 | 0 | 0% |
-| **合计** | **13** | **3** | **23%** |
+| **合计** | **13** | **4** | **31%** |
 
 ---
 
@@ -52,7 +52,7 @@
 ## Phase 2: 领域层 (BrewKit)
 
 ### T2.1 — 模型 + 协议 + 命令枚举
-- **状态**: ⬜ 待开始
+- **状态**: ✅ 已完成
 - **描述**:
   - Models/PackageType.swift — enum .formula / .cask
   - Models/BrewPackage.swift — 统一包模型
@@ -178,3 +178,4 @@
 | 2026-06-19 | T0.1 | ✅ 完成 | Git 仓库初始化 + 远程关联，main/develop 分支已推送 |
 | 2026-06-19 | T1.1 | ✅ 完成 | Package.swift + 完整目录骨架，swift build 通过 |
 | 2026-06-19 | T1.2 | ✅ 完成 | build.sh 构建脚本，BrewMate.app 生成成功 |
+| 2026-06-19 | T2.1 | ✅ 完成 | BrewKit 领域层：11 个 Swift 文件（Models 8 + Protocols 2 + Commands 1），swift build 通过 |
