@@ -7,13 +7,13 @@
 | 阶段 | 任务数 | 已完成 | 进度 |
 |------|--------|--------|------|
 | Phase 0: Git 初始化 | 1 | 1 | 100% |
-| Phase 1: 项目骨架 | 2 | 1 | 50% |
+| Phase 1: 项目骨架 | 2 | 2 | 100% |
 | Phase 2: 领域层 (BrewKit) | 1 | 0 | 0% |
 | Phase 3: 基础设施层 (BrewShell) | 1 | 0 | 0% |
 | Phase 4: UI 骨架 | 1 | 0 | 0% |
 | Phase 5: 核心页面 | 5 | 0 | 0% |
 | Phase 6: 打包与验证 | 2 | 0 | 0% |
-| **合计** | **13** | **2** | **15%** |
+| **合计** | **13** | **3** | **23%** |
 
 ---
 
@@ -42,7 +42,7 @@
 - **验证**: swift build 编译通过（空 target）
 
 ### T1.2 — build.sh 构建脚本
-- **状态**: ⬜ 待开始
+- **状态**: ✅ 已完成
 - **描述**: 编写构建脚本，swift build -c release 后创建 .app bundle 结构（Contents/MacOS + Info.plist）
 - **产出**: build.sh
 - **验证**: 运行 bash build.sh 生成 BrewMate.app
@@ -177,3 +177,4 @@
 | 2026-06-19 | — | 创建文档 | tasks.md 初始化 |
 | 2026-06-19 | T0.1 | ✅ 完成 | Git 仓库初始化 + 远程关联，main/develop 分支已推送 |
 | 2026-06-19 | T1.1 | ✅ 完成 | Package.swift + 完整目录骨架，swift build 通过 |
+| 2026-06-19 | T1.2 | ✅ 完成 | build.sh 构建脚本，BrewMate.app 生成成功 |
