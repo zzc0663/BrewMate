@@ -190,3 +190,4 @@
 | 2026-06-19 | T5.3 | ✅ 完成 | ExploreView：2 个 Swift 文件（ExploreViewModel + ExploreView），debounce 300ms 搜索 + Formula/Cask 分区 |
 | 2026-06-19 | T5.4 | ✅ 完成 | UpdatesView：2 个 Swift 文件（UpdatesViewModel + UpdatesView），outdated 列表 + 全部更新 + 单个更新 |
 | 2026-06-19 | T5.5 | ✅ 完成 | SettingsView：1 个 Swift 文件，主题 Picker + 关于信息 |
+| 2026-06-19 | T5.1-T5.5 | 🔧 修复 | Code Review 发现 14 个问题：High: CancellationError 未过滤×5、DetailViewModel 操作后不刷新 AppState；Medium: isReady 回退×2、搜索覆盖、raw string dispatch、API 不一致；Low: @Bindable 简化、空描述、emoji、header 数据源 |
