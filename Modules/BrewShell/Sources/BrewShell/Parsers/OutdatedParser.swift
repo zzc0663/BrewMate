@@ -24,14 +24,14 @@ enum OutdatedParser {
         }
 
         for cask in envelope.casks {
-            let installedVersion = cask.installed ?? "unknown"
-            let latestVersion = cask.version
+            let installedVersion = cask.installed_versions.first ?? "unknown"
+            let latestVersion = cask.current_version
             packages.append(OutdatedPackage(
-                name: cask.token,
+                name: cask.name,
                 type: .cask,
                 installedVersion: installedVersion,
                 latestVersion: latestVersion,
-                isPinned: false
+                isPinned: cask.pinned
             ))
         }
 

@@ -102,7 +102,6 @@ T{编号}: {type}({scope}): {简短描述}
 | `installed` | 已安装页面 |
 | `detail` | 详情页面 |
 | `explore` | 搜索/探索页面 |
-| `updates` | 更新页面 |
 | `settings` | 设置页面 |
 | `docs` | 文档 |
 

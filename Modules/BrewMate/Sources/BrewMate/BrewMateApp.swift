@@ -44,7 +44,7 @@ struct BrewMateApp: App {
             appState.repository = repository
             appState.isReady = true
             await appState.refreshTrustStatus()
-            // ContentView 的 .task 会触发 loadInstalled / loadOutdated
+            await appState.refreshAll()
         } catch {
             appState.errorMessage = "无法找到 Homebrew: \(error.localizedDescription)"
         }

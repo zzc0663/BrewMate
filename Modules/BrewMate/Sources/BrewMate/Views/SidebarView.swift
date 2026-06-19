@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// 左侧导航栏 — 4 个导航项 + 更新 badge
+/// 左侧导航栏 — 3 个导航项 + 已安装 badge
 struct SidebarView: View {
     @Binding var selection: SidebarItem
     let outdatedCount: Int
@@ -11,7 +11,7 @@ struct SidebarView: View {
             Label {
                 HStack {
                     Text(item.displayName)
-                    if item == .updates && outdatedCount > 0 {
+                    if item == .installed && outdatedCount > 0 {
                         Spacer()
                         Text("\(outdatedCount)")
                             .font(.caption2.weight(.bold))

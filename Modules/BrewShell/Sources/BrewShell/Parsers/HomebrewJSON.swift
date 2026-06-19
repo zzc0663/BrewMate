@@ -133,7 +133,8 @@ struct OutdatedFormulaJSON: Decodable {
 
 /// outdated Cask 条目
 struct OutdatedCaskJSON: Decodable {
-    let token: String
-    let installed: String?
-    let version: String
+    let name: String
+    let installed_versions: [String]
+    let current_version: String
+    let pinned: Bool
 }

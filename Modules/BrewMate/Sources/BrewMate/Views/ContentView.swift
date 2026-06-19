@@ -23,7 +23,6 @@ struct ContentView: View {
         .onChange(of: appState.selectedSidebar) {
             appState.selectedPackage = nil
             appState.selectedExplorePackage = nil
-            appState.selectedOutdated = nil
         }
     }
 
@@ -34,8 +33,6 @@ struct ContentView: View {
             InstalledView()
         case .explore:
             ExploreView()
-        case .updates:
-            UpdatesView()
         case .settings:
             SettingsView()
         }
@@ -47,6 +44,7 @@ struct ContentView: View {
         case .installed:
             if let package = appState.selectedPackage {
                 PackageDetailView(package: package)
+                    .id(package.id)
             } else {
                 EmptyStateView(
                     icon: "shippingbox",
@@ -58,32 +56,12 @@ struct ContentView: View {
         case .explore:
             if let package = appState.selectedExplorePackage {
                 PackageDetailView(package: package)
+                    .id(package.id)
             } else {
                 EmptyStateView(
                     icon: "magnifyingglass",
                     title: "选择一个结果",
                     message: "从搜索结果中选择一个包查看详情"
-                )
-            }
-
-        case .updates:
-            if let package = appState.selectedOutdated {
-                PackageDetailView(package: BrewPackage(
-                    name: package.name,
-                    fullName: package.name,
-                    type: package.type,
-                    description: "",
-                    homepage: nil,
-                    currentVersion: package.latestVersion,
-                    installedVersions: [package.installedVersion],
-                    isInstalled: true,
-                    isOutdated: true
-                ))
-            } else {
-                EmptyStateView(
-                    icon: "arrow.triangle.2.circlepath",
-                    title: "选择一个更新项",
-                    message: "从可更新列表中选择一个包查看详情"
                 )
             }
 
