@@ -1,18 +1,26 @@
 import Foundation
 
 /// 可更新的包信息
-struct OutdatedPackage: Identifiable, Sendable {
+public struct OutdatedPackage: Identifiable, Sendable {
     /// 唯一标识：name + type 组合
-    var id: String { "\(type.rawValue)/\(name)" }
+    public var id: String { "\(type.rawValue)/\(name)" }
 
     /// 包名
-    let name: String
+    public let name: String
     /// 包类型
-    let type: PackageType
+    public let type: PackageType
     /// 当前已安装版本
-    let installedVersion: String
+    public let installedVersion: String
     /// 可用的最新版本
-    let latestVersion: String
+    public let latestVersion: String
     /// 是否被固定（pinned）
-    let isPinned: Bool
+    public let isPinned: Bool
+
+    public init(name: String, type: PackageType, installedVersion: String, latestVersion: String, isPinned: Bool) {
+        self.name = name
+        self.type = type
+        self.installedVersion = installedVersion
+        self.latestVersion = latestVersion
+        self.isPinned = isPinned
+    }
 }

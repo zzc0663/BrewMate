@@ -2,7 +2,7 @@ import Foundation
 
 /// Homebrew CLI 命令枚举
 /// 新增功能只加 case，不改现有代码
-enum BrewCommand: Equatable, Sendable {
+public enum BrewCommand: Equatable, Sendable {
     /// 列出已安装的包（JSON 格式）
     case listInstalled
     /// 搜索包
@@ -21,15 +21,15 @@ enum BrewCommand: Equatable, Sendable {
     case outdated
 
     /// 命令描述（用于日志和 UI 展示）
-    var commandLine: String {
+    public var commandLine: String {
         "brew " + arguments.joined(separator: " ")
     }
 
     /// 转换为 brew CLI 参数列表
-    var arguments: [String] {
+    public var arguments: [String] {
         switch self {
         case .listInstalled:
-            return ["list", "--installed", "--json=v2"]
+            return ["info", "--installed", "--json=v2"]
 
         case .search(let query, let type):
             var args = ["search", query]

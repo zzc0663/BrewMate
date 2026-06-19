@@ -1,7 +1,7 @@
 import Foundation
 
 /// 结构化错误 —— 每个 case 提供可直接展示的 errorDescription
-enum BrewError: LocalizedError, Equatable {
+public enum BrewError: LocalizedError, Equatable {
     /// brew 命令执行失败
     case commandFailed(command: String, exitCode: Int32, stderr: String)
     /// 包未找到
@@ -17,7 +17,7 @@ enum BrewError: LocalizedError, Equatable {
     /// 操作被取消
     case cancelled
 
-    var errorDescription: String? {
+    public var errorDescription: String? {
         switch self {
         case .commandFailed(let command, let exitCode, let stderr):
             return "命令失败: \(command) (exit \(exitCode))\n\(stderr)"

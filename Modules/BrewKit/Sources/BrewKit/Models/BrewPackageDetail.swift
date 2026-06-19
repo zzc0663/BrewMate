@@ -1,19 +1,29 @@
 import Foundation
 
 /// 包的详细信息（info 页面用）
-struct BrewPackageDetail: Hashable, Sendable {
+public struct BrewPackageDetail: Hashable, Sendable {
     /// 基础信息
-    let package: BrewPackage
+    public let package: BrewPackage
     /// 安装大小（字节数，nil 表示未知）
-    let installSize: Int64?
+    public let installSize: Int64?
     /// 依赖列表
-    let dependencies: [String]
+    public let dependencies: [String]
     /// 被哪些包依赖
-    let requiredBy: [String]
+    public let requiredBy: [String]
     /// 安装路径
-    let cellarPath: String?
+    public let cellarPath: String?
     /// License
-    let license: String?
+    public let license: String?
     /// tap 来源（如 homebrew/core）
-    let tap: String?
+    public let tap: String?
+
+    public init(package: BrewPackage, installSize: Int64?, dependencies: [String], requiredBy: [String], cellarPath: String?, license: String?, tap: String?) {
+        self.package = package
+        self.installSize = installSize
+        self.dependencies = dependencies
+        self.requiredBy = requiredBy
+        self.cellarPath = cellarPath
+        self.license = license
+        self.tap = tap
+    }
 }

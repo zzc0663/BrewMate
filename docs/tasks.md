@@ -9,11 +9,11 @@
 | Phase 0: Git 初始化 | 1 | 1 | 100% |
 | Phase 1: 项目骨架 | 2 | 2 | 100% |
 | Phase 2: 领域层 (BrewKit) | 1 | 1 | 100% |
-| Phase 3: 基础设施层 (BrewShell) | 1 | 0 | 0% |
+| Phase 3: 基础设施层 (BrewShell) | 1 | 1 | 100% |
 | Phase 4: UI 骨架 | 1 | 0 | 0% |
 | Phase 5: 核心页面 | 5 | 0 | 0% |
 | Phase 6: 打包与验证 | 2 | 0 | 0% |
-| **合计** | **13** | **4** | **31%** |
+| **合计** | **13** | **5** | **38%** |
 
 ---
 
@@ -73,7 +73,7 @@
 ## Phase 3: 基础设施层 (BrewShell)
 
 ### T3.1 — ProcessRunner + Parsers + Executor + Repository
-- **状态**: ⬜ 待开始
+- **状态**: ✅ 已完成
 - **描述**:
   - ProcessRunner.swift — 封装 Process 为 AsyncThrowingStream
   - BrewPathResolver.swift — which brew 自动检测路径
@@ -83,8 +83,9 @@
   - Parsers/SearchParser.swift — 解析 brew search 纯文本输出
   - BrewCommandExecutor.swift — 实现 BrewExecutor 协议
   - BrewPackageRepository.swift — 实现 PackageRepository，actor + 30s TTL 缓存
-- **产出**: 8 个 Swift 文件
+- **产出**: 9 个 Swift 文件（含 HomebrewJSON.swift 解码模型）
 - **验证**: swift build 编译通过，BrewShell target 无错误
+- **Commit**: `feat(brewshell): 实现基础设施层 — ProcessRunner + Parsers + Executor + Repository`
 
 ---
 
@@ -180,3 +181,5 @@
 | 2026-06-19 | T1.2 | ✅ 完成 | build.sh 构建脚本，BrewMate.app 生成成功 |
 | 2026-06-19 | T2.1 | ✅ 完成 | BrewKit 领域层：11 个 Swift 文件（Models 8 + Protocols 2 + Commands 1），swift build 通过 |
 | 2026-06-19 | T2.1 | 🔧 修复 | Code Review 发现 15 个问题，修复 12 个：id碰撞、Hashable、Equatable、--json=v2、force unwrap、invalidateCache async 等 |
+| 2026-06-19 | T3.1 | ✅ 完成 | BrewShell 基础设施层：9 个 Swift 文件（ProcessRunner + 4 Parsers + JSON模型 + Executor + Repository），BrewKit 类型改为 public 以便跨模块访问 |
+| 2026-06-19 | T3.1 | 🔧 修复 | Code Review 发现 11 个问题：Critical: listInstalled 命令错误；High: cask版本字段×2、wrapWriteStream取消泄漏；Medium: UTF-8分片、stderr丢失、installSize/requiredBy字段错误、AtomicFlag死代码；Low: SearchParser headers |

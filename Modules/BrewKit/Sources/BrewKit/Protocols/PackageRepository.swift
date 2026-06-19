@@ -1,7 +1,7 @@
 import Foundation
 
 /// 包仓库协议（基础设施层实现，内置缓存）
-protocol PackageRepository: Sendable {
+public protocol PackageRepository: Sendable {
     /// 已安装的包列表
     func installed() async throws -> [BrewPackage]
 
