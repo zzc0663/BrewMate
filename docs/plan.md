@@ -187,21 +187,22 @@ class AppState {
 
 `NavigationSplitView` 三栏: Sidebar(200pt) | List(flexible) | Detail(300pt+)
 
-### SidebarView (4 个导航项)
+### SidebarView (3 个导航项)
 
 | 图标 | 标签 | 说明 |
 |------|------|------|
-| `house.fill` | 已安装 | InstalledView |
+| `house.fill` | 已安装 | InstalledView（有可更新项时显示 badge） |
 | `magnifyingglass` | 探索 | ExploreView |
-| `arrow.triangle.2.circlepath` | 更新 | UpdatesView (有可更新时显示 badge) |
 | `gearshape` | 设置 | SettingsView |
 
 ### InstalledView
 
-- 顶部: 本地搜索过滤 + 分段控制 (All / Formula / Cask)
+- 顶部: 本地搜索过滤 + 分段控制 (All / Formula / Cask) + 批量操作栏
 - 列表: PackageRowView (图标 + 包名 + 版本 + 类型标签)
-- 选中行展开 PackageDetailView
-- 右键菜单: 卸载 / 查看详情 / 复制名称
+- 支持原生多选，右侧详情显示当前焦点包
+- 批量操作: 批量更新 / 批量卸载 / 刷新
+- 卸载前弹出确认对话框
+- 右键菜单: 查看详情 / 更新 / 加入批量选择 / 卸载
 
 ### ExploreView
 
@@ -210,18 +211,11 @@ class AppState {
 - 已安装的包显示绿色勾 + "已安装" 标签
 - 未安装显示 "安装" 按钮
 
-### UpdatesView
-
-- 自动加载 `brew outdated`
-- 每行: 包名 + 当前版本 → 最新版本
-- "全部更新" 按钮 + 单个 "更新" 按钮
-- 更新时 LogConsoleView 实时显示 brew 输出
-
 ### PackageDetailView
 
 - 包名、描述、版本、Homepage 外链
 - 依赖列表
-- 操作按钮: 安装 / 卸载 / 更新 (根据状态动态显示)
+- 操作按钮: 安装 / 更新 / 卸载 (根据状态动态显示，更新与卸载同组)
 - 底部 LogConsoleView
 
 ### SettingsView
@@ -254,9 +248,8 @@ enum AppTheme: String, CaseIterable {
 3. **BrewMate App 骨架** — AppState、ContentView、SidebarView、ThemeManager
 4. **InstalledView** — 列表 + 过滤 + PackageRowView + PackageDetailView
 5. **ExploreView** — 搜索 + 安装
-6. **UpdatesView** — 更新列表 + 全部更新 + LogConsoleView
-7. **SettingsView** — 主题切换
-8. **build.sh** — 打包脚本
+6. **SettingsView** — 主题切换
+7. **build.sh** — 打包脚本
 
 ---
 
@@ -269,8 +262,8 @@ enum AppTheme: String, CaseIterable {
 | 已安装列表加载 | 首次 ~7s 加载 26 formula + 4 cask，切换 tab 秒返回 |
 | 搜索 | 输入 `wget` → 300ms debounce → 显示结果 |
 | 安装/卸载 | Explore 安装 → Installed 列表刷新；Installed 卸载 → 列表刷新 |
-| 更新检测 | Updates 显示 3 个 outdated (node, cc-switch, wailbrew) |
-| 实时日志 | 安装/更新时 LogConsoleView 逐行输出 brew stdout |
+| 更新检测 | Installed 显示可更新 badge，详情与批量更新入口可用 |
+| 实时日志 | 安装/更新/批量操作时 LogConsoleView 逐行输出 brew stdout |
 | 主题切换 | Settings 切 Light/Dark/System，界面立即响应 |
 | 错误处理 | 安装不存在的包 → 显示友好错误，不崩溃 |
 | 缓存 | Installed 页首次加载后，10 秒内再切回，数据瞬间出现 |

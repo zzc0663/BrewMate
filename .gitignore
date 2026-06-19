@@ -20,8 +20,10 @@ Package.resolved
 
 # Build artifacts
 BrewMate.app/
+dist/
 *.dmg
 *.ipa
+.cache/
 
 # IDE
 .idea/

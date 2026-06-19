@@ -1,6 +1,6 @@
 # BrewMate — Git 工作流规范
 
-> 最后更新: 2026-06-19
+> 最后更新: 2026-06-20
 
 ## 分支策略（Git Flow 简化版）
 
@@ -8,9 +8,19 @@
 
 | 分支 | 用途 | 生命周期 |
 |------|------|---------|
-| `main` | 生产稳定版本，只接受 merge，永远可部署 | 永久 |
-| `develop` | 开发集成分支，日常开发的基准 | 永久 |
+| `main` | 发布分支，只接收准备发布的版本，正式 tag 只从这里打 | 永久 |
+| `develop` | 持续开发分支，日常开发和功能集成的基准 | 永久 |
 | `feature/{任务编号}-{简述}` | 每个任务一个 feature 分支 | 完成后合并到 develop 并删除 |
+
+### 仓库保留规则
+
+- 远程仓库长期只保留 `main` 和 `develop`
+- `develop` 用于继续开发，不直接承载正式发布
+- `main` 只接收准备发布的版本
+- 所有正式版本 tag 只从 `main` 分支创建
+- `feature/*` 分支只用于任务开发和评审，合并完成后必须删除本地和远程分支
+- 不长期保留历史 `feature/*`、`fix/*`、`hotfix/*` 分支
+- 如果后续需要修复线上问题，也优先按任务分支方式处理，并在合并完成后删除临时分支
 
 ### 分支命名规范
 
@@ -102,7 +112,6 @@ T{编号}: {type}({scope}): {简短描述}
 | `installed` | 已安装页面 |
 | `detail` | 详情页面 |
 | `explore` | 搜索/探索页面 |
-| `updates` | 更新页面 |
 | `settings` | 设置页面 |
 | `docs` | 文档 |
 
@@ -129,15 +138,51 @@ T6.2: test(regression): 功能回归测试
 | 操作 | 时机 |
 |------|------|
 | `push develop` | 每完成一个任务 |
-| `merge develop → main` | Phase 完成时（里程碑） |
-| `push main` | 里程碑推送 |
+| `merge develop → main` | 准备正式发布时 |
+| `push main` | 发布前推送 |
+| `tag main` | 仅正式发布时，从 `main` 创建 `v*` tag |
+
+### 发布流程
+
+正式版本发布时使用下面的顺序：
+
+```bash
+# 1. 确认 develop 已完成本次发布内容
+git checkout develop
+git pull origin develop
+
+# 2. 合并到 main
+git checkout main
+git pull origin main
+git merge --no-ff develop
+git push origin main
+
+# 3. 只从 main 打正式 tag
+git tag -a v1.0.0 -m "BrewMate v1.0.0"
+git push origin v1.0.0
+```
+
+### 分支清理检查
+
+每次任务合并后，检查以下结果：
+
+```bash
+git branch -a -vv
+git ls-remote --heads origin
+```
+
+正确状态应为：
+
+- 本地常驻分支只有 `main`、`develop`
+- 远程常驻分支只有 `origin/main`、`origin/develop`
+- 已完成任务的 `feature/*` 分支不再保留
 
 ---
 
 ## 远程仓库
 
 ```
-origin: git@github.com:zzc0663/new-brew.git
+origin: git@github.com:zzc0663/BrewMate.git
 ```
 
 ---
@@ -154,7 +199,7 @@ git add docs/
 git commit -m "chore(init): 项目初始化，添加规划文档"
 
 # 3. 关联远程
-git remote add origin git@github.com:zzc0663/new-brew.git
+git remote add origin git@github.com:zzc0663/BrewMate.git
 git push -u origin main
 
 # 4. 创建 develop 分支
