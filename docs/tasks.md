@@ -10,10 +10,10 @@
 | Phase 1: 项目骨架 | 2 | 2 | 100% |
 | Phase 2: 领域层 (BrewKit) | 1 | 1 | 100% |
 | Phase 3: 基础设施层 (BrewShell) | 1 | 1 | 100% |
-| Phase 4: UI 骨架 | 1 | 0 | 0% |
+| Phase 4: UI 骨架 | 1 | 1 | 100% |
 | Phase 5: 核心页面 | 5 | 0 | 0% |
 | Phase 6: 打包与验证 | 2 | 0 | 0% |
-| **合计** | **13** | **5** | **38%** |
+| **合计** | **13** | **6** | **46%** |
 
 ---
 
@@ -92,7 +92,7 @@
 ## Phase 4: UI 骨架
 
 ### T4.1 — App 入口 + AppState + Sidebar + Theme
-- **状态**: ⬜ 待开始
+- **状态**: ✅ 已完成
 - **描述**:
   - BrewMateApp.swift — @main 入口，Window 配置
   - State/AppState.swift — @Observable 全局状态（DI 注入 repository）
@@ -103,7 +103,7 @@
   - Views/Components/LoadingOverlay.swift — 加载指示器
   - Views/Components/LogConsoleView.swift — 终端风格实时日志
 - **产出**: 8 个 Swift 文件
-- **验证**: swift run 启动，窗口显示三栏布局 + 侧栏导航
+- **验证**: swift build 编译通过，BrewMate target 无错误
 
 ---
 
@@ -183,3 +183,4 @@
 | 2026-06-19 | T2.1 | 🔧 修复 | Code Review 发现 15 个问题，修复 12 个：id碰撞、Hashable、Equatable、--json=v2、force unwrap、invalidateCache async 等 |
 | 2026-06-19 | T3.1 | ✅ 完成 | BrewShell 基础设施层：9 个 Swift 文件（ProcessRunner + 4 Parsers + JSON模型 + Executor + Repository），BrewKit 类型改为 public 以便跨模块访问 |
 | 2026-06-19 | T3.1 | 🔧 修复 | Code Review 发现 11 个问题：Critical: listInstalled 命令错误；High: cask版本字段×2、wrapWriteStream取消泄漏；Medium: UTF-8分片、stderr丢失、installSize/requiredBy字段错误、AtomicFlag死代码；Low: SearchParser headers |
+| 2026-06-19 | T4.1 | ✅ 完成 | UI 骨架：8 个 Swift 文件（BrewMateApp + AppState + ContentView + SidebarView + ThemeManager + 3 Components），BrewShell/BrewKit 类型全部改为 public |

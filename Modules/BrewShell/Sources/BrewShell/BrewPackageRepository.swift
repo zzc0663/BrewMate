@@ -3,7 +3,7 @@ import Foundation
 
 /// PackageRepository 协议实现
 /// Actor 保证线程安全，内置 30 秒 TTL 缓存
-actor BrewPackageRepository: @preconcurrency PackageRepository {
+public actor BrewPackageRepository: @preconcurrency PackageRepository {
 
     private let executor: BrewCommandExecutor
 
@@ -17,13 +17,13 @@ actor BrewPackageRepository: @preconcurrency PackageRepository {
     private var outdatedCache: [OutdatedPackage]?
     private var outdatedCacheTime: Date = .distantPast
 
-    init(executor: BrewCommandExecutor) {
+    public init(executor: BrewCommandExecutor) {
         self.executor = executor
     }
 
     // MARK: - 读操作（带缓存）
 
-    func installed() async throws -> [BrewPackage] {
+    public func installed() async throws -> [BrewPackage] {
         if let cached = installedCache, Date().timeIntervalSince(installedCacheTime) < cacheTTL {
             return cached
         }
@@ -34,7 +34,7 @@ actor BrewPackageRepository: @preconcurrency PackageRepository {
         return packages
     }
 
-    func outdated() async throws -> [OutdatedPackage] {
+    public func outdated() async throws -> [OutdatedPackage] {
         if let cached = outdatedCache, Date().timeIntervalSince(outdatedCacheTime) < cacheTTL {
             return cached
         }
@@ -45,19 +45,19 @@ actor BrewPackageRepository: @preconcurrency PackageRepository {
         return packages
     }
 
-    func search(query: String, type: PackageType?) async throws -> [BrewPackage] {
+    public func search(query: String, type: PackageType?) async throws -> [BrewPackage] {
         // search 不缓存（结果依赖查询词）
         let text = try await collectOutput(.search(query: query, type: type))
         return SearchParser.parse(text, type: type)
     }
 
-    func info(for package: String, type: PackageType) async throws -> BrewPackageDetail {
+    public func info(for package: String, type: PackageType) async throws -> BrewPackageDetail {
         // info 不缓存（按需查询单个包）
         let data = try await collectJSON(.info(name: package, type: type))
         return try InfoParser.parse(data, type: type)
     }
 
-    func invalidateCache() {
+    public func invalidateCache() {
         installedCache = nil
         outdatedCache = nil
         installedCacheTime = .distantPast
@@ -66,15 +66,15 @@ actor BrewPackageRepository: @preconcurrency PackageRepository {
 
     // MARK: - 写操作（自动清缓存）
 
-    func install(name: String, type: PackageType) -> AsyncThrowingStream<CommandEvent, Error> {
+    public func install(name: String, type: PackageType) -> AsyncThrowingStream<CommandEvent, Error> {
         wrapWriteStream(.install(name: name, type: type))
     }
 
-    func uninstall(name: String, type: PackageType) -> AsyncThrowingStream<CommandEvent, Error> {
+    public func uninstall(name: String, type: PackageType) -> AsyncThrowingStream<CommandEvent, Error> {
         wrapWriteStream(.uninstall(name: name, type: type))
     }
 
-    func upgrade(name: String?, type: PackageType?) -> AsyncThrowingStream<CommandEvent, Error> {
+    public func upgrade(name: String?, type: PackageType?) -> AsyncThrowingStream<CommandEvent, Error> {
         wrapWriteStream(.upgrade(name: name, type: type))
     }
 

@@ -3,16 +3,16 @@ import BrewKit
 
 /// 封装 Foundation Process 为 AsyncThrowingStream
 /// 每次调用 execute() 创建新的子进程，逐行输出 stdout/stderr
-final class ProcessRunner: @unchecked Sendable {
+public final class ProcessRunner: @unchecked Sendable {
 
     private let brewPath: String
 
-    init(brewPath: String) {
+    public init(brewPath: String) {
         self.brewPath = brewPath
     }
 
     /// 执行 brew 命令，返回实时事件流
-    func execute(_ command: BrewCommand) -> AsyncThrowingStream<CommandEvent, Error> {
+    public func execute(_ command: BrewCommand) -> AsyncThrowingStream<CommandEvent, Error> {
         execute(executable: brewPath, arguments: command.arguments)
     }
 
@@ -20,7 +20,7 @@ final class ProcessRunner: @unchecked Sendable {
     /// - Parameters:
     ///   - executable: 可执行文件路径
     ///   - arguments: 命令行参数
-    func execute(executable: String, arguments: [String]) -> AsyncThrowingStream<CommandEvent, Error> {
+    public func execute(executable: String, arguments: [String]) -> AsyncThrowingStream<CommandEvent, Error> {
         let pipeQueue = DispatchQueue(label: "com.brewmate.processrunner.pipe")
 
         let process = Process()
