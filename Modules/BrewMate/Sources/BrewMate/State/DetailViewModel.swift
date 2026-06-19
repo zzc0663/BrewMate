@@ -7,13 +7,13 @@ enum PackageOperation: String {
 }
 
 /// 包详情页面状态管理
-@Observable @MainActor
-final class DetailViewModel {
+@MainActor
+final class DetailViewModel: ObservableObject {
     // MARK: - State
-    var detail: BrewPackageDetail?
-    var isLoading: Bool = false
-    var errorMessage: String?
-    var operation: OperationStatus?
+    @Published var detail: BrewPackageDetail?
+    @Published var isLoading: Bool = false
+    @Published var errorMessage: String?
+    @Published var operation: OperationStatus?
 
     // MARK: - Actions
 
@@ -43,6 +43,7 @@ final class DetailViewModel {
     ) async {
         let label: String
         let stream: AsyncThrowingStream<CommandEvent, Error>
+        errorMessage = nil
 
         switch op {
         case .install:
@@ -79,7 +80,35 @@ final class DetailViewModel {
             await repository.invalidateCache()
             await appState.loadInstalled()
             await appState.loadOutdated()
-            await loadDetail(for: package, repository: repository)
+
+            let refreshedPackage = appState.installed.first {
+                $0.name == package.name && $0.type == package.type
+            }
+
+            switch op {
+            case .install:
+                guard let refreshedPackage, refreshedPackage.isInstalled else {
+                    throw BrewError.commandFailed(
+                        command: op.rawValue,
+                        exitCode: 1,
+                        stderr: "brew 命令结束后未在已安装列表中找到 \(package.name)"
+                    )
+                }
+                await loadDetail(for: refreshedPackage, repository: repository)
+
+            case .uninstall:
+                if let refreshedPackage, refreshedPackage.isInstalled {
+                    throw BrewError.commandFailed(
+                        command: op.rawValue,
+                        exitCode: 1,
+                        stderr: "brew 命令结束后 \(package.name) 仍然存在于已安装列表"
+                    )
+                }
+                detail = nil
+
+            case .upgrade:
+                await loadDetail(for: refreshedPackage ?? package, repository: repository)
+            }
         } catch {
             if !(error is CancellationError) {
                 errorMessage = error.localizedDescription

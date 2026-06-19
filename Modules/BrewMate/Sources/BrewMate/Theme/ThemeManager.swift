@@ -24,9 +24,9 @@ enum AppTheme: String, CaseIterable, Sendable {
 }
 
 /// 主题管理器 — 使用 @AppStorage 持久化
-@Observable @MainActor
-final class ThemeManager {
-    var currentTheme: AppTheme {
+@MainActor
+final class ThemeManager: ObservableObject {
+    @Published var currentTheme: AppTheme {
         didSet {
             UserDefaults.standard.set(currentTheme.rawValue, forKey: "appTheme")
         }

@@ -4,6 +4,7 @@ import SwiftUI
 struct SidebarView: View {
     @Binding var selection: SidebarItem
     let outdatedCount: Int
+    let showTrustWarning: Bool
 
     var body: some View {
         List(SidebarItem.allCases, selection: $selection) { item in
@@ -18,6 +19,11 @@ struct SidebarView: View {
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
                             .background(.red, in: Capsule())
+                    } else if item == .settings && showTrustWarning {
+                        Spacer()
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .font(.caption2)
+                            .foregroundStyle(.orange)
                     }
                 }
             } icon: {

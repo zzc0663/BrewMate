@@ -3,17 +3,14 @@ import BrewKit
 
 /// 已安装页面 — 搜索过滤 + 分段控制 + 包列表
 struct InstalledView: View {
-    @Environment(AppState.self) private var appState
-    @State private var viewModel = InstalledViewModel()
+    @EnvironmentObject private var appState: AppState
+    @StateObject private var viewModel = InstalledViewModel()
 
     var body: some View {
-        @Bindable var vm = viewModel
-        @Bindable var state = appState
-
         VStack(spacing: 0) {
             // 搜索 + 分段控制
-            searchBar(searchText: $vm.searchText)
-            filterBar(selected: $vm.selectedType)
+            searchBar(searchText: $viewModel.searchText)
+            filterBar(selected: $viewModel.selectedType)
 
             Divider()
 
@@ -35,10 +32,9 @@ struct InstalledView: View {
                         : "没有匹配 \"\(viewModel.searchText)\" 的包"
                 )
             } else {
-                List(viewModel.filteredPackages, selection: $state.selectedPackage) { package in
-                    NavigationLink(value: package) {
-                        PackageRowView(package)
-                    }
+                List(viewModel.filteredPackages, selection: $appState.selectedPackage) { package in
+                    PackageRowView(package)
+                        .tag(package)
                 }
                 .listStyle(.inset(alternatesRowBackgrounds: true))
             }
@@ -67,6 +63,11 @@ struct InstalledView: View {
             // AppState 数据变化时同步到 ViewModel
             if !appState.installed.isEmpty {
                 viewModel.packages = appState.installed
+            }
+
+            if let selected = appState.selectedPackage,
+               !appState.installed.contains(selected) {
+                appState.selectedPackage = nil
             }
         }
         .onChange(of: appState.isReady) {

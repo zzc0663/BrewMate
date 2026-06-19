@@ -5,14 +5,14 @@ import BrewShell
 /// BrewMate — macOS Homebrew 图形化管理工具
 @main
 struct BrewMateApp: App {
-    @State private var appState: AppState
-    @State private var themeManager: ThemeManager
+    @StateObject private var appState: AppState
+    @StateObject private var themeManager: ThemeManager
 
     init() {
         let themeManager = ThemeManager()
         let tm = themeManager
-        self._themeManager = State(initialValue: tm)
-        self._appState = State(initialValue: AppState(
+        self._themeManager = StateObject(wrappedValue: tm)
+        self._appState = StateObject(wrappedValue: AppState(
             repository: PlaceholderRepository(),
             themeManager: tm
         ))
@@ -21,8 +21,8 @@ struct BrewMateApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environment(appState)
-                .environment(themeManager)
+                .environmentObject(appState)
+                .environmentObject(themeManager)
                 .preferredColorScheme(themeManager.currentTheme.colorScheme)
                 .frame(minWidth: 900, minHeight: 600)
                 .task {
@@ -43,6 +43,7 @@ struct BrewMateApp: App {
             // 原地替换 repository，保留已有的 UI 状态
             appState.repository = repository
             appState.isReady = true
+            await appState.refreshTrustStatus()
             // ContentView 的 .task 会触发 loadInstalled / loadOutdated
         } catch {
             appState.errorMessage = "无法找到 Homebrew: \(error.localizedDescription)"
