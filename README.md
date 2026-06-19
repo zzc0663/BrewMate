@@ -251,8 +251,16 @@ bash scripts/render_release_notes.sh
 
 ### 推荐发布流程
 
+分支约定：
+
+- `develop` 用来继续开发
+- `main` 只接收准备发布的版本
+- 所有正式 tag 只从 `main` 打
+
 1. 更新 `VERSION`
 2. 提交并推送代码
-3. 创建 tag：`git tag -a v<version> -m "BrewMate v<version>"`
-4. 推送 tag：`git push origin v<version>`
-5. 等待 GitHub Actions 构建、签名、公证并创建 GitHub Release
+3. 将 `develop` 合并到 `main`
+4. 推送 `main`
+5. 从 `main` 创建 tag：`git tag -a v<version> -m "BrewMate v<version>"`
+6. 推送 tag：`git push origin v<version>`
+7. 等待 GitHub Actions 构建、签名、公证并创建 GitHub Release
