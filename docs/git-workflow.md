@@ -1,6 +1,6 @@
 # BrewMate — Git 工作流规范
 
-> 最后更新: 2026-06-19
+> 最后更新: 2026-06-20
 
 ## 分支策略（Git Flow 简化版）
 
@@ -11,6 +11,13 @@
 | `main` | 生产稳定版本，只接受 merge，永远可部署 | 永久 |
 | `develop` | 开发集成分支，日常开发的基准 | 永久 |
 | `feature/{任务编号}-{简述}` | 每个任务一个 feature 分支 | 完成后合并到 develop 并删除 |
+
+### 仓库保留规则
+
+- 远程仓库长期只保留 `main` 和 `develop`
+- `feature/*` 分支只用于任务开发和评审，合并完成后必须删除本地和远程分支
+- 不长期保留历史 `feature/*`、`fix/*`、`hotfix/*` 分支
+- 如果后续需要修复线上问题，也优先按任务分支方式处理，并在合并完成后删除临时分支
 
 ### 分支命名规范
 
@@ -131,12 +138,27 @@ T6.2: test(regression): 功能回归测试
 | `merge develop → main` | Phase 完成时（里程碑） |
 | `push main` | 里程碑推送 |
 
+### 分支清理检查
+
+每次任务合并后，检查以下结果：
+
+```bash
+git branch -a -vv
+git ls-remote --heads origin
+```
+
+正确状态应为：
+
+- 本地常驻分支只有 `main`、`develop`
+- 远程常驻分支只有 `origin/main`、`origin/develop`
+- 已完成任务的 `feature/*` 分支不再保留
+
 ---
 
 ## 远程仓库
 
 ```
-origin: git@github.com:zzc0663/new-brew.git
+origin: git@github.com:zzc0663/BrewMate.git
 ```
 
 ---
@@ -153,7 +175,7 @@ git add docs/
 git commit -m "chore(init): 项目初始化，添加规划文档"
 
 # 3. 关联远程
-git remote add origin git@github.com:zzc0663/new-brew.git
+git remote add origin git@github.com:zzc0663/BrewMate.git
 git push -u origin main
 
 # 4. 创建 develop 分支

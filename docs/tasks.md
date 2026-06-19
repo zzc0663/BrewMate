@@ -24,7 +24,7 @@
 - **描述**:
   - `git init`
   - 创建 main 分支，初始提交 docs/
-  - `git remote add origin git@github.com:zzc0663/new-brew.git`
+  - `git remote add origin git@github.com:zzc0663/BrewMate.git`
   - 推送 main
   - 创建 develop 分支并推送
 - **分支**: main → develop
