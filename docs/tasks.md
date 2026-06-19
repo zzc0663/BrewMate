@@ -12,8 +12,8 @@
 | Phase 3: 基础设施层 (BrewShell) | 1 | 1 | 100% |
 | Phase 4: UI 骨架 | 1 | 1 | 100% |
 | Phase 5: 核心页面 | 5 | 5 | 100% |
-| Phase 6: 打包与验证 | 2 | 2 | 100% |
-| **合计** | **13** | **13** | **100%** |
+| Phase 6: 打包与验证 | 3 | 3 | 100% |
+| **合计** | **14** | **14** | **100%** |
 
 ---
 
@@ -97,7 +97,7 @@
   - BrewMateApp.swift — @main 入口，Window 配置
   - State/AppState.swift — @Observable 全局状态（DI 注入 repository）
   - Views/ContentView.swift — NavigationSplitView 三栏主框架
-  - Views/SidebarView.swift — 4 个导航项 + badge
+  - Views/SidebarView.swift — 3 个导航项 + badge
   - Theme/ThemeManager.swift — @AppStorage 主题管理
   - Views/Components/EmptyStateView.swift — 空状态占位
   - Views/Components/LoadingOverlay.swift — 加载指示器
@@ -163,11 +163,27 @@
 - **描述**:
   - 已安装列表加载（首次 ~7s，切 tab 秒返回）
   - 搜索 + 安装 + 卸载流程
-  - 更新检测 + 单个/全部更新
+  - 更新检测 + 已安装页更新操作
   - 主题切换 Light/Dark/System
   - 错误处理（安装不存在的包）
   - 缓存验证（10s 内切回 Installed 秒返回）
 - **验证**: 代码审查通过，修复 3 个问题（loadOutdated 补充、UpdatesView 错误显示、清理死代码）
+
+### T6.4 — 已安装页接管更新与批量操作
+- **状态**: ✅ 已完成
+- **描述**:
+  - 移除独立 Updates 导航与详情入口
+  - 已安装页支持多选、批量更新、批量卸载、确认弹窗
+  - 包详情页将更新与卸载统一到同一操作栏目
+  - 文档同步更新新的信息架构与验证结果
+- **分支**: `feature/T6.4-installed-bulk-operations`
+- **验证**:
+  - 侧边栏不再显示“更新”
+  - 已安装页支持多选和批量操作
+  - 详情页已安装包显示统一操作区
+  - `swift build -c release` 通过
+  - `bash build.sh` 通过
+  - `BrewMate.app` 启动通过
 
 ---
 
@@ -193,3 +209,5 @@
 | 2026-06-19 | T5.1-T5.5 | 🔧 修复 | Code Review 发现 14 个问题：High: CancellationError 未过滤×5、DetailViewModel 操作后不刷新 AppState；Medium: isReady 回退×2、搜索覆盖、raw string dispatch、API 不一致；Low: @Bindable 简化、空描述、emoji、header 数据源 |
 | 2026-06-19 | T6.1 | ✅ 完成 | 全量编译验证：swift build 零错误零 warning，应用启动运行 3 秒无崩溃 |
 | 2026-06-19 | T6.2 | ✅ 完成 | 功能回归测试：代码审查 6 项全部通过，修复 3 个问题（loadOutdated 补充、UpdatesView 错误显示、清理 activeOperations 死代码） |
+| 2026-06-19 | T6.4 | 🔄 进行中 | 创建功能分支 `feature/T6.4-installed-bulk-operations`，开始重构“已安装页接管更新与批量操作” |
+| 2026-06-19 | T6.4 | ✅ 完成 | 移除独立 Updates 页面；已安装页接管更新 badge、详情更新入口、多选批量更新/卸载、确认弹窗；`swift build -c release`、`bash build.sh`、`BrewMate.app` 启动通过 |

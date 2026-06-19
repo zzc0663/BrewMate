@@ -19,8 +19,6 @@ final class AppState: ObservableObject {
     @Published var selectedPackage: BrewPackage?
     /// 探索页选中的包
     @Published var selectedExplorePackage: BrewPackage?
-    /// 更新页选中的包
-    @Published var selectedOutdated: OutdatedPackage?
 
     // MARK: - 加载状态
 
@@ -141,7 +139,6 @@ final class AppState: ObservableObject {
 enum SidebarItem: String, CaseIterable, Identifiable, Sendable {
     case installed
     case explore
-    case updates
     case settings
 
     var id: String { rawValue }
@@ -150,7 +147,6 @@ enum SidebarItem: String, CaseIterable, Identifiable, Sendable {
         switch self {
         case .installed: return "已安装"
         case .explore: return "探索"
-        case .updates: return "更新"
         case .settings: return "设置"
         }
     }
@@ -159,7 +155,6 @@ enum SidebarItem: String, CaseIterable, Identifiable, Sendable {
         switch self {
         case .installed: return "house.fill"
         case .explore: return "magnifyingglass"
-        case .updates: return "arrow.triangle.2.circlepath"
         case .settings: return "gearshape"
         }
     }

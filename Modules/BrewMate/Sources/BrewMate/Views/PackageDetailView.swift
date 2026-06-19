@@ -63,6 +63,10 @@ struct PackageDetailView: View {
         }
         .task {
             await viewModel.loadDetail(for: package, repository: appState.repository)
+            viewModel.syncOutdatedStatus(using: appState.outdated)
+        }
+        .onChange(of: appState.outdated) {
+            viewModel.syncOutdatedStatus(using: appState.outdated)
         }
     }
 
@@ -204,6 +208,11 @@ struct PackageDetailView: View {
 
     private func actionSection(_ detail: BrewPackageDetail) -> some View {
         let displayPackage = detail.package
+        let canUpdate = displayPackage.isInstalled && (
+            displayPackage.isOutdated
+            || (displayPackage.installedVersions.first != nil
+                && displayPackage.installedVersions.first != displayPackage.currentVersion)
+        )
 
         return VStack(alignment: .leading, spacing: 10) {
             Text("操作")
@@ -211,7 +220,7 @@ struct PackageDetailView: View {
 
             HStack(spacing: 12) {
                 if displayPackage.isInstalled {
-                    if displayPackage.isOutdated {
+                    if canUpdate {
                         Button {
                             Task {
                                 await viewModel.performOperation(
@@ -222,7 +231,7 @@ struct PackageDetailView: View {
                                 )
                             }
                         } label: {
-                            Label("升级", systemImage: "arrow.up.circle")
+                            Label("更新", systemImage: "arrow.up.circle")
                         }
                         .buttonStyle(.borderedProminent)
                         .tint(.orange)

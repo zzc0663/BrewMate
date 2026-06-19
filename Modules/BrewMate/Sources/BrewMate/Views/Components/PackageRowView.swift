@@ -5,14 +5,32 @@ import BrewKit
 struct PackageRowView: View {
     let package: BrewPackage
     let isUpgradable: Bool
+    let isSelectedForBatch: Bool
+    let onToggleBatchSelection: (() -> Void)?
 
-    init(_ package: BrewPackage, isUpgradable: Bool = false) {
+    init(
+        _ package: BrewPackage,
+        isUpgradable: Bool = false,
+        isSelectedForBatch: Bool = false,
+        onToggleBatchSelection: (() -> Void)? = nil
+    ) {
         self.package = package
         self.isUpgradable = isUpgradable
+        self.isSelectedForBatch = isSelectedForBatch
+        self.onToggleBatchSelection = onToggleBatchSelection
     }
 
     var body: some View {
         HStack(spacing: 12) {
+            Button {
+                onToggleBatchSelection?()
+            } label: {
+                Image(systemName: isSelectedForBatch ? "checkmark.circle.fill" : "circle")
+                    .foregroundStyle(isSelectedForBatch ? Color.accentColor : .secondary)
+            }
+            .buttonStyle(.plain)
+            .help(isSelectedForBatch ? "取消选择" : "选择用于批量操作")
+
             // 图标
             Image(systemName: package.type == .cask ? "app.fill" : "terminal.fill")
                 .font(.system(size: 20))

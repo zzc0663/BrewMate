@@ -34,6 +34,39 @@ final class DetailViewModel: ObservableObject {
         isLoading = false
     }
 
+    func syncOutdatedStatus(using outdated: [OutdatedPackage]) {
+        guard let detail else { return }
+        let isOutdated = outdated.contains {
+            $0.name == detail.package.name && $0.type == detail.package.type
+        }
+
+        if detail.package.isOutdated == isOutdated {
+            return
+        }
+
+        let package = BrewPackage(
+            name: detail.package.name,
+            fullName: detail.package.fullName,
+            type: detail.package.type,
+            description: detail.package.description,
+            homepage: detail.package.homepage,
+            currentVersion: detail.package.currentVersion,
+            installedVersions: detail.package.installedVersions,
+            isInstalled: detail.package.isInstalled,
+            isOutdated: isOutdated
+        )
+
+        self.detail = BrewPackageDetail(
+            package: package,
+            installSize: detail.installSize,
+            dependencies: detail.dependencies,
+            requiredBy: detail.requiredBy,
+            cellarPath: detail.cellarPath,
+            license: detail.license,
+            tap: detail.tap
+        )
+    }
+
     /// 执行操作（install / uninstall / upgrade）
     func performOperation(
         _ op: PackageOperation,
