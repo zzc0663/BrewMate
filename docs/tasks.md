@@ -110,7 +110,7 @@
 ## Phase 5: 核心页面
 
 ### T5.1 — InstalledView（已安装列表）
-- **状态**: ⬜ 待开始
+- **状态**: ✅ 已完成
 - **描述**:
   - InstalledView.swift — 搜索过滤 + 分段控制 (All/Formula/Cask)
   - PackageRowView.swift — 图标 + 包名 + 版本 + 类型标签
@@ -119,7 +119,7 @@
 - **验证**: 已安装的 26 formula + 4 cask 正确显示，过滤和分段控制正常
 
 ### T5.2 — PackageDetailView（包详情）
-- **状态**: ⬜ 待开始
+- **状态**: ✅ 已完成
 - **描述**:
   - PackageDetailView.swift — 包名、描述、版本、Homepage、依赖、操作按钮、日志区
   - DetailViewModel.swift — 加载详情、触发操作
@@ -127,7 +127,7 @@
 - **验证**: 点击包名展开详情，显示完整信息，操作按钮可用
 
 ### T5.3 — ExploreView（搜索 + 安装）
-- **状态**: ⬜ 待开始
+- **状态**: ✅ 已完成
 - **描述**:
   - ExploreView.swift — 搜索框 (debounce 300ms) + Formula/Cask 分区结果
   - ExploreViewModel.swift — 搜索、安装逻辑
@@ -135,7 +135,7 @@
 - **验证**: 搜索 wget 返回结果，点击安装按钮执行安装
 
 ### T5.4 — UpdatesView（更新管理）
-- **状态**: ⬜ 待开始
+- **状态**: ✅ 已完成
 - **描述**:
   - UpdatesView.swift — outdated 列表 + 全部更新 + 单个更新 + 日志
   - UpdatesViewModel.swift — 加载 outdated、升级逻辑
@@ -143,7 +143,7 @@
 - **验证**: 显示 3 个 outdated（node, cc-switch, wailbrew），更新按钮可用
 
 ### T5.5 — SettingsView（设置页）
-- **状态**: ⬜ 待开始
+- **状态**: ✅ 已完成
 - **描述**:
   - SettingsView.swift — 主题 Picker (segmented: 跟随系统/浅色/深色)
 - **产出**: 1 个 Swift 文件
@@ -185,3 +185,8 @@
 | 2026-06-19 | T3.1 | 🔧 修复 | Code Review 发现 11 个问题：Critical: listInstalled 命令错误；High: cask版本字段×2、wrapWriteStream取消泄漏；Medium: UTF-8分片、stderr丢失、installSize/requiredBy字段错误、AtomicFlag死代码；Low: SearchParser headers |
 | 2026-06-19 | T4.1 | ✅ 完成 | UI 骨架：8 个 Swift 文件（BrewMateApp + AppState + ContentView + SidebarView + ThemeManager + 3 Components），BrewShell/BrewKit 类型全部改为 public |
 | 2026-06-19 | T4.1 | 🔧 修复 | Code Review 发现 6 个问题：AppState/ThemeManager @MainActor 隔离、原地替换 repository 避免 UI 状态重置、appendLog 数据竞争、PlaceholderRepository fatalError→throw、.task 双重加载 |
+| 2026-06-19 | T5.1 | ✅ 完成 | InstalledView：3 个 Swift 文件（InstalledViewModel + PackageRowView + InstalledView），搜索过滤 + 分段控制 + NavigationLink |
+| 2026-06-19 | T5.2 | ✅ 完成 | PackageDetailView：2 个 Swift 文件（DetailViewModel + PackageDetailView），详情信息 + 依赖 + 操作按钮 + FlowLayout |
+| 2026-06-19 | T5.3 | ✅ 完成 | ExploreView：2 个 Swift 文件（ExploreViewModel + ExploreView），debounce 300ms 搜索 + Formula/Cask 分区 |
+| 2026-06-19 | T5.4 | ✅ 完成 | UpdatesView：2 个 Swift 文件（UpdatesViewModel + UpdatesView），outdated 列表 + 全部更新 + 单个更新 |
+| 2026-06-19 | T5.5 | ✅ 完成 | SettingsView：1 个 Swift 文件，主题 Picker + 关于信息 |

@@ -1,4 +1,5 @@
 import SwiftUI
+import BrewKit
 
 /// 主框架 — NavigationSplitView 三栏布局
 struct ContentView: View {
@@ -23,67 +24,33 @@ struct ContentView: View {
     private var detailView: some View {
         switch appState.selectedSidebar {
         case .installed:
-            installedPlaceholder
+            InstalledView()
+                .navigationDestination(for: BrewPackage.self) { package in
+                    PackageDetailView(package: package)
+                }
         case .explore:
-            explorePlaceholder
+            ExploreView()
+                .navigationDestination(for: BrewPackage.self) { package in
+                    PackageDetailView(package: package)
+                }
         case .updates:
-            updatesPlaceholder
+            UpdatesView()
+                .navigationDestination(for: OutdatedPackage.self) { package in
+                    // OutdatedPackage 导航到详情（构造临时 BrewPackage）
+                    PackageDetailView(package: BrewPackage(
+                        name: package.name,
+                        fullName: package.name,
+                        type: package.type,
+                        description: "",
+                        homepage: nil,
+                        currentVersion: package.latestVersion,
+                        installedVersions: [package.installedVersion],
+                        isInstalled: true,
+                        isOutdated: true
+                    ))
+                }
         case .settings:
-            settingsPlaceholder
+            SettingsView()
         }
-    }
-
-    // MARK: - 占位视图（Phase 5 替换为真实页面）
-
-    private var installedPlaceholder: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "house.fill")
-                .font(.system(size: 48))
-                .foregroundStyle(.secondary)
-            Text("已安装")
-                .font(.title2)
-            Text("共 \(appState.installed.count) 个包")
-                .foregroundStyle(.secondary)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .task { await appState.loadInstalled() }
-    }
-
-    private var explorePlaceholder: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "magnifyingglass")
-                .font(.system(size: 48))
-                .foregroundStyle(.secondary)
-            Text("探索")
-                .font(.title2)
-            Text("搜索并安装新的包")
-                .foregroundStyle(.secondary)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-
-    private var updatesPlaceholder: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "arrow.triangle.2.circlepath")
-                .font(.system(size: 48))
-                .foregroundStyle(.secondary)
-            Text("更新")
-                .font(.title2)
-            Text("检查可用更新")
-                .foregroundStyle(.secondary)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .task { await appState.loadOutdated() }
-    }
-
-    private var settingsPlaceholder: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "gearshape")
-                .font(.system(size: 48))
-                .foregroundStyle(.secondary)
-            Text("设置")
-                .font(.title2)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }

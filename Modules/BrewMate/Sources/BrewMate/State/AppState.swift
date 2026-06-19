@@ -17,6 +17,10 @@ final class AppState {
 
     var selectedSidebar: SidebarItem = .installed
     var selectedPackage: BrewPackage?
+    /// 探索页选中的包
+    var selectedExplorePackage: BrewPackage?
+    /// 更新页选中的包
+    var selectedOutdated: OutdatedPackage?
 
     // MARK: - 加载状态
 
@@ -47,7 +51,9 @@ final class AppState {
         do {
             installed = try await repository.installed()
         } catch {
-            errorMessage = error.localizedDescription
+            if !(error is CancellationError) {
+                errorMessage = error.localizedDescription
+            }
         }
         isLoadingInstalled = false
     }
@@ -59,7 +65,9 @@ final class AppState {
         do {
             outdated = try await repository.outdated()
         } catch {
-            errorMessage = error.localizedDescription
+            if !(error is CancellationError) {
+                errorMessage = error.localizedDescription
+            }
         }
         isLoadingOutdated = false
     }
@@ -81,6 +89,11 @@ final class AppState {
         if commandLog.count > 500 {
             commandLog.removeFirst(commandLog.count - 500)
         }
+    }
+
+    /// 便捷日志方法（content + isError）
+    func appendLog(_ content: String, _ isError: Bool = false) {
+        appendLog(command: "", content: content, isError: isError)
     }
 }
 

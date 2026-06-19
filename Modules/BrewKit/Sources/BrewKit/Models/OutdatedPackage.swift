@@ -1,7 +1,7 @@
 import Foundation
 
 /// 可更新的包信息
-public struct OutdatedPackage: Identifiable, Sendable {
+public struct OutdatedPackage: Identifiable, Hashable, Sendable {
     /// 唯一标识：name + type 组合
     public var id: String { "\(type.rawValue)/\(name)" }
 
