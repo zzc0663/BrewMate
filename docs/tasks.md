@@ -7,13 +7,13 @@
 | 阶段 | 任务数 | 已完成 | 进度 |
 |------|--------|--------|------|
 | Phase 0: Git 初始化 | 1 | 1 | 100% |
-| Phase 1: 项目骨架 | 2 | 0 | 0% |
+| Phase 1: 项目骨架 | 2 | 1 | 50% |
 | Phase 2: 领域层 (BrewKit) | 1 | 0 | 0% |
 | Phase 3: 基础设施层 (BrewShell) | 1 | 0 | 0% |
 | Phase 4: UI 骨架 | 1 | 0 | 0% |
 | Phase 5: 核心页面 | 5 | 0 | 0% |
 | Phase 6: 打包与验证 | 2 | 0 | 0% |
-| **合计** | **13** | **1** | **8%** |
+| **合计** | **13** | **2** | **15%** |
 
 ---
 
@@ -36,7 +36,7 @@
 ## Phase 1: 项目骨架
 
 ### T1.1 — Package.swift + 目录结构
-- **状态**: ⬜ 待开始
+- **状态**: ✅ 已完成
 - **描述**: 创建 Package.swift，定义 3 个 SPM target（BrewKit library / BrewShell library / BrewMate executable），建立完整目录结构
 - **产出**: Package.swift + 完整空目录骨架
 - **验证**: swift build 编译通过（空 target）
@@ -176,3 +176,4 @@
 |------|------|------|------|
 | 2026-06-19 | — | 创建文档 | tasks.md 初始化 |
 | 2026-06-19 | T0.1 | ✅ 完成 | Git 仓库初始化 + 远程关联，main/develop 分支已推送 |
+| 2026-06-19 | T1.1 | ✅ 完成 | Package.swift + 完整目录骨架，swift build 通过 |
