@@ -22,4 +22,12 @@ enum PackageType: String, Codable, Sendable, CaseIterable {
         case .cask: return "casks"
         }
     }
+
+    /// brew CLI 类型标志（--formula / --cask）
+    var cliFlag: String {
+        switch self {
+        case .formula: return "--formula"
+        case .cask: return "--cask"
+        }
+    }
 }

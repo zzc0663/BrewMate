@@ -2,7 +2,8 @@ import Foundation
 
 /// 统一的 Homebrew 包模型（Formula + Cask 共用）
 struct BrewPackage: Identifiable, Hashable, Sendable {
-    var id: String { name }
+    /// 唯一标识：name + type 组合，避免 formula/cask 同名碰撞
+    var id: String { "\(type.rawValue)/\(name)" }
 
     /// 短名称（formula: name; cask: token）
     let name: String
@@ -22,4 +23,15 @@ struct BrewPackage: Identifiable, Hashable, Sendable {
     let isInstalled: Bool
     /// 是否有可用更新
     let isOutdated: Bool
+
+    // 自定义 Hashable：仅基于身份字段（name + type），避免
+    // description / installedVersions 等可变字段影响 SwiftUI diffing
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+        hasher.combine(type)
+    }
+
+    static func == (lhs: BrewPackage, rhs: BrewPackage) -> Bool {
+        lhs.name == rhs.name && lhs.type == rhs.type
+    }
 }

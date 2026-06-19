@@ -1,7 +1,7 @@
 import Foundation
 
 /// 结构化错误 —— 每个 case 提供可直接展示的 errorDescription
-enum BrewError: LocalizedError {
+enum BrewError: LocalizedError, Equatable {
     /// brew 命令执行失败
     case commandFailed(command: String, exitCode: Int32, stderr: String)
     /// 包未找到

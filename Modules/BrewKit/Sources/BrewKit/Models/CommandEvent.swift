@@ -1,7 +1,7 @@
 import Foundation
 
 /// brew 命令执行过程中的实时事件
-enum CommandEvent: Sendable {
+enum CommandEvent: Equatable, Sendable {
     /// 输出一行标准输出
     case output(line: String)
     /// 输出一行标准错误

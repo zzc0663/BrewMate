@@ -1,7 +1,7 @@
 import Foundation
 
 /// 包的详细信息（info 页面用）
-struct BrewPackageDetail: Sendable {
+struct BrewPackageDetail: Hashable, Sendable {
     /// 基础信息
     let package: BrewPackage
     /// 安装大小（字节数，nil 表示未知）

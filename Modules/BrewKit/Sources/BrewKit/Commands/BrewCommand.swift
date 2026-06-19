@@ -2,7 +2,7 @@ import Foundation
 
 /// Homebrew CLI 命令枚举
 /// 新增功能只加 case，不改现有代码
-enum BrewCommand: Sendable {
+enum BrewCommand: Equatable, Sendable {
     /// 列出已安装的包（JSON 格式）
     case listInstalled
     /// 搜索包
@@ -21,56 +21,36 @@ enum BrewCommand: Sendable {
     case outdated
 
     /// 命令描述（用于日志和 UI 展示）
-    var description: String {
-        switch self {
-        case .listInstalled:
-            return "brew list --installed"
-        case .search(let query, _):
-            return "brew search \(query)"
-        case .info(let name, _):
-            return "brew info \(name)"
-        case .install(let name, _):
-            return "brew install \(name)"
-        case .uninstall(let name, _):
-            return "brew uninstall \(name)"
-        case .upgrade(let name, _):
-            return name != nil ? "brew upgrade \(name!)" : "brew upgrade"
-        case .update:
-            return "brew update"
-        case .outdated:
-            return "brew outdated"
-        }
+    var commandLine: String {
+        "brew " + arguments.joined(separator: " ")
     }
 
     /// 转换为 brew CLI 参数列表
     var arguments: [String] {
         switch self {
         case .listInstalled:
-            return ["list", "--installed"]
+            return ["list", "--installed", "--json=v2"]
 
         case .search(let query, let type):
             var args = ["search", query]
             if let type {
-                args += type == .cask ? ["--cask"] : ["--formula"]
+                args.append(type.cliFlag)
             }
             return args
 
         case .info(let name, let type):
-            let prefix = type == .cask ? "--cask" : "--formula"
-            return ["info", prefix, "--json=v2", name]
+            return ["info", type.cliFlag, "--json=v2", name]
 
         case .install(let name, let type):
-            let prefix = type == .cask ? "--cask" : "--formula"
-            return ["install", prefix, name]
+            return ["install", type.cliFlag, name]
 
         case .uninstall(let name, let type):
-            let prefix = type == .cask ? "--cask" : "--formula"
-            return ["uninstall", prefix, name]
+            return ["uninstall", type.cliFlag, name]
 
         case .upgrade(let name, let type):
             var args = ["upgrade"]
             if let type {
-                args += type == .cask ? ["--cask"] : ["--formula"]
+                args.append(type.cliFlag)
             }
             if let name {
                 args.append(name)

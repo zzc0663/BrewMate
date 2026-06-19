@@ -179,3 +179,4 @@
 | 2026-06-19 | T1.1 | ✅ 完成 | Package.swift + 完整目录骨架，swift build 通过 |
 | 2026-06-19 | T1.2 | ✅ 完成 | build.sh 构建脚本，BrewMate.app 生成成功 |
 | 2026-06-19 | T2.1 | ✅ 完成 | BrewKit 领域层：11 个 Swift 文件（Models 8 + Protocols 2 + Commands 1），swift build 通过 |
+| 2026-06-19 | T2.1 | 🔧 修复 | Code Review 发现 15 个问题，修复 12 个：id碰撞、Hashable、Equatable、--json=v2、force unwrap、invalidateCache async 等 |

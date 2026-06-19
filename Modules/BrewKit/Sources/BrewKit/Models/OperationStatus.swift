@@ -1,7 +1,7 @@
 import Foundation
 
 /// 正在执行的操作状态
-struct OperationStatus: Identifiable, Sendable {
+struct OperationStatus: Identifiable, Hashable, Sendable {
     let id: UUID
     /// 操作名称（如 "Installing wget"）
     let label: String
@@ -10,8 +10,8 @@ struct OperationStatus: Identifiable, Sendable {
     /// 最后一行输出
     var lastOutput: String?
 
-    init(label: String, progress: Double? = nil, lastOutput: String? = nil) {
-        self.id = UUID()
+    init(id: UUID = UUID(), label: String, progress: Double? = nil, lastOutput: String? = nil) {
+        self.id = id
         self.label = label
         self.progress = progress
         self.lastOutput = lastOutput
