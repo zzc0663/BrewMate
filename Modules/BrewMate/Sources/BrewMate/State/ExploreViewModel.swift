@@ -92,6 +92,7 @@ final class ExploreViewModel {
 
             await repository.invalidateCache()
             await appState.loadInstalled()
+            await appState.loadOutdated()
             appState.appendLog("✅ \(package.name) 安装完成", false)
         } catch {
             if !(error is CancellationError) {

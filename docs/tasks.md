@@ -11,9 +11,9 @@
 | Phase 2: 领域层 (BrewKit) | 1 | 1 | 100% |
 | Phase 3: 基础设施层 (BrewShell) | 1 | 1 | 100% |
 | Phase 4: UI 骨架 | 1 | 1 | 100% |
-| Phase 5: 核心页面 | 5 | 0 | 0% |
-| Phase 6: 打包与验证 | 2 | 0 | 0% |
-| **合计** | **13** | **6** | **46%** |
+| Phase 5: 核心页面 | 5 | 5 | 100% |
+| Phase 6: 打包与验证 | 2 | 2 | 100% |
+| **合计** | **13** | **13** | **100%** |
 
 ---
 
@@ -154,12 +154,12 @@
 ## Phase 6: 打包与验证
 
 ### T6.1 — 全量编译验证
-- **状态**: ⬜ 待开始
+- **状态**: ✅ 已完成
 - **描述**: swift build 零错误零 warning，swift run 启动正常
-- **验证**: 编译输出干净
+- **验证**: 编译输出干净，应用启动运行 3 秒无崩溃
 
 ### T6.2 — 功能回归测试
-- **状态**: ⬜ 待开始
+- **状态**: ✅ 已完成
 - **描述**:
   - 已安装列表加载（首次 ~7s，切 tab 秒返回）
   - 搜索 + 安装 + 卸载流程
@@ -167,7 +167,7 @@
   - 主题切换 Light/Dark/System
   - 错误处理（安装不存在的包）
   - 缓存验证（10s 内切回 Installed 秒返回）
-- **验证**: 全部通过
+- **验证**: 代码审查通过，修复 3 个问题（loadOutdated 补充、UpdatesView 错误显示、清理死代码）
 
 ---
 
@@ -191,3 +191,5 @@
 | 2026-06-19 | T5.4 | ✅ 完成 | UpdatesView：2 个 Swift 文件（UpdatesViewModel + UpdatesView），outdated 列表 + 全部更新 + 单个更新 |
 | 2026-06-19 | T5.5 | ✅ 完成 | SettingsView：1 个 Swift 文件，主题 Picker + 关于信息 |
 | 2026-06-19 | T5.1-T5.5 | 🔧 修复 | Code Review 发现 14 个问题：High: CancellationError 未过滤×5、DetailViewModel 操作后不刷新 AppState；Medium: isReady 回退×2、搜索覆盖、raw string dispatch、API 不一致；Low: @Bindable 简化、空描述、emoji、header 数据源 |
+| 2026-06-19 | T6.1 | ✅ 完成 | 全量编译验证：swift build 零错误零 warning，应用启动运行 3 秒无崩溃 |
+| 2026-06-19 | T6.2 | ✅ 完成 | 功能回归测试：代码审查 6 项全部通过，修复 3 个问题（loadOutdated 补充、UpdatesView 错误显示、清理 activeOperations 死代码） |

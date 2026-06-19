@@ -10,7 +10,6 @@ final class AppState {
 
     var installed: [BrewPackage] = []
     var outdated: [OutdatedPackage] = []
-    var activeOperations: [String: OperationStatus] = [:]
     var commandLog: [LogEntry] = []
 
     // MARK: - 导航

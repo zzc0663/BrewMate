@@ -89,6 +89,7 @@ final class InstalledViewModel {
 
             await repository.invalidateCache()
             await appState.loadInstalled()
+            await appState.loadOutdated()
             await load(repository: repository)
         } catch {
             if !(error is CancellationError) {

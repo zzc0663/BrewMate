@@ -37,6 +37,25 @@ struct UpdatesView: View {
 
                 Divider()
 
+                // 错误提示
+                if let error = viewModel.errorMessage {
+                    HStack(spacing: 8) {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .foregroundStyle(.orange)
+                        Text(error)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        Button("关闭") { viewModel.errorMessage = nil }
+                            .buttonStyle(.plain)
+                            .font(.caption)
+                            .foregroundStyle(.blue)
+                    }
+                    .padding(.horizontal)
+                    .padding(.vertical, 6)
+                    .background(.orange.opacity(0.08))
+                }
+
                 // 列表
                 List(appState.outdated, selection: $state.selectedOutdated) { package in
                     outdatedRow(package)
