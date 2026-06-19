@@ -184,3 +184,4 @@
 | 2026-06-19 | T3.1 | ✅ 完成 | BrewShell 基础设施层：9 个 Swift 文件（ProcessRunner + 4 Parsers + JSON模型 + Executor + Repository），BrewKit 类型改为 public 以便跨模块访问 |
 | 2026-06-19 | T3.1 | 🔧 修复 | Code Review 发现 11 个问题：Critical: listInstalled 命令错误；High: cask版本字段×2、wrapWriteStream取消泄漏；Medium: UTF-8分片、stderr丢失、installSize/requiredBy字段错误、AtomicFlag死代码；Low: SearchParser headers |
 | 2026-06-19 | T4.1 | ✅ 完成 | UI 骨架：8 个 Swift 文件（BrewMateApp + AppState + ContentView + SidebarView + ThemeManager + 3 Components），BrewShell/BrewKit 类型全部改为 public |
+| 2026-06-19 | T4.1 | 🔧 修复 | Code Review 发现 6 个问题：AppState/ThemeManager @MainActor 隔离、原地替换 repository 避免 UI 状态重置、appendLog 数据竞争、PlaceholderRepository fatalError→throw、.task 双重加载 |
