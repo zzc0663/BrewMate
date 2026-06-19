@@ -12,8 +12,8 @@ struct HomebrewJSON: Decodable {
 struct FormulaJSON: Decodable {
     let name: String
     let full_name: String
-    let desc: String
-    let homepage: [String]
+    let desc: String?
+    let homepage: String?
     let versions: VersionsJSON
     let installed: [InstalledJSON]
     let dependencies: [String]
@@ -39,6 +39,28 @@ struct FormulaJSON: Decodable {
     struct RequirementJSON: Decodable {
         let name: String
     }
+
+    private enum CodingKeys: String, CodingKey {
+        case name, full_name, desc, homepage, versions, installed, dependencies
+        case build_dependencies, requirements, tap, license, keg_only, pinned
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        full_name = try container.decode(String.self, forKey: .full_name)
+        desc = try container.decodeIfPresent(String.self, forKey: .desc)
+        homepage = try container.decodeIfPresent(String.self, forKey: .homepage)
+        versions = try container.decode(VersionsJSON.self, forKey: .versions)
+        installed = try container.decodeIfPresent([InstalledJSON].self, forKey: .installed) ?? []
+        dependencies = try container.decodeIfPresent([String].self, forKey: .dependencies) ?? []
+        build_dependencies = try container.decodeIfPresent([String].self, forKey: .build_dependencies) ?? []
+        requirements = try container.decodeIfPresent([RequirementJSON].self, forKey: .requirements) ?? []
+        tap = try container.decodeIfPresent(String.self, forKey: .tap) ?? "homebrew/core"
+        license = try container.decodeIfPresent(String.self, forKey: .license)
+        keg_only = try container.decodeIfPresent(Bool.self, forKey: .keg_only) ?? false
+        pinned = try container.decodeIfPresent(Bool.self, forKey: .pinned) ?? false
+    }
 }
 
 /// Cask JSON 条目
@@ -58,6 +80,11 @@ struct CaskJSON: Decodable {
 
         var keys: [String] { cask + formula }
 
+        init(cask: [String], formula: [String]) {
+            self.cask = cask
+            self.formula = formula
+        }
+
         // 自定义解码：depends_on 可能缺失某些键
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -68,6 +95,23 @@ struct CaskJSON: Decodable {
         private enum CodingKeys: String, CodingKey {
             case cask, formula
         }
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case token, full_token, desc, homepage, version, installed, tap, depends_on
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        token = try container.decode(String.self, forKey: .token)
+        full_token = try container.decodeIfPresent(String.self, forKey: .full_token) ?? token
+        desc = try container.decodeIfPresent(String.self, forKey: .desc)
+        homepage = try container.decodeIfPresent(String.self, forKey: .homepage)
+        version = try container.decodeIfPresent(String.self, forKey: .version)
+        installed = try container.decodeIfPresent(String.self, forKey: .installed)
+        tap = try container.decodeIfPresent(String.self, forKey: .tap) ?? "homebrew/cask"
+        depends_on = (try? container.decode(DependsOnJSON.self, forKey: .depends_on))
+            ?? DependsOnJSON(cask: [], formula: [])
     }
 }
 

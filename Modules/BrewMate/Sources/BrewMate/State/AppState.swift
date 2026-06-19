@@ -1,31 +1,35 @@
 import SwiftUI
 import BrewKit
+import BrewShell
 
 /// 全局共享状态 — @Observable 驱动 UI 更新
 /// 所有 View 读取同一个 AppState，Explore 安装包 → Installed 自动看到更新
-@Observable @MainActor
-final class AppState {
+@MainActor
+final class AppState: ObservableObject {
 
     // MARK: - 数据
 
-    var installed: [BrewPackage] = []
-    var outdated: [OutdatedPackage] = []
-    var commandLog: [LogEntry] = []
+    @Published var installed: [BrewPackage] = []
+    @Published var outdated: [OutdatedPackage] = []
+    @Published var commandLog: [LogEntry] = []
 
     // MARK: - 导航
 
-    var selectedSidebar: SidebarItem = .installed
-    var selectedPackage: BrewPackage?
+    @Published var selectedSidebar: SidebarItem = .installed
+    @Published var selectedPackage: BrewPackage?
     /// 探索页选中的包
-    var selectedExplorePackage: BrewPackage?
+    @Published var selectedExplorePackage: BrewPackage?
     /// 更新页选中的包
-    var selectedOutdated: OutdatedPackage?
+    @Published var selectedOutdated: OutdatedPackage?
 
     // MARK: - 加载状态
 
-    var isLoadingInstalled = false
-    var isLoadingOutdated = false
-    var errorMessage: String?
+    @Published var isLoadingInstalled = false
+    @Published var isLoadingOutdated = false
+    @Published var isTrustOperationInProgress = false
+    @Published var errorMessage: String?
+    @Published var trustStatus: BrewTrustStatus?
+    @Published var isTrustBannerDismissed = false
 
     // MARK: - 依赖
 
@@ -33,7 +37,7 @@ final class AppState {
     let themeManager: ThemeManager
 
     /// 是否已用真实 repository 替换 placeholder
-    var isReady = false
+    @Published var isReady = false
 
     init(repository: PackageRepository, themeManager: ThemeManager) {
         self.repository = repository
@@ -78,6 +82,42 @@ final class AppState {
         async let a: () = loadInstalled()
         async let b: () = loadOutdated()
         _ = await (a, b)
+    }
+
+    func refreshTrustStatus() async {
+        do {
+            let brewPath = try await BrewPathResolver.resolve()
+            trustStatus = try await BrewEnvironmentInspector.inspect(brewPath: brewPath)
+        } catch {
+            if !(error is CancellationError) {
+                errorMessage = error.localizedDescription
+            }
+        }
+    }
+
+    func trustTap(_ tap: String) async {
+        guard !isTrustOperationInProgress else { return }
+        isTrustOperationInProgress = true
+        errorMessage = nil
+
+        do {
+            let brewPath = try await BrewPathResolver.resolve()
+            try await BrewEnvironmentInspector.trustTap(brewPath: brewPath, tap: tap)
+            appendLog("✅ 已信任第三方仓库: \(tap)", false)
+            await refreshTrustStatus()
+        } catch {
+            if !(error is CancellationError) {
+                errorMessage = error.localizedDescription
+                appendLog("Trust failed: \(error.localizedDescription)", true)
+            }
+        }
+
+        isTrustOperationInProgress = false
+    }
+
+    var shouldShowTrustWarning: Bool {
+        guard let trustStatus else { return false }
+        return trustStatus.hasWarning && !isTrustBannerDismissed
     }
 
     /// 记录命令日志

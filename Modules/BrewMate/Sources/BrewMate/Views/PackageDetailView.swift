@@ -4,8 +4,8 @@ import BrewKit
 /// 包详情页面 — 基本信息 + 依赖 + 操作按钮 + 日志
 struct PackageDetailView: View {
     let package: BrewPackage
-    @Environment(AppState.self) private var appState
-    @State private var viewModel = DetailViewModel()
+    @EnvironmentObject private var appState: AppState
+    @StateObject private var viewModel = DetailViewModel()
 
     var body: some View {
         ScrollView {
@@ -69,34 +69,36 @@ struct PackageDetailView: View {
     // MARK: - Header
 
     private var headerSection: some View {
-        HStack(spacing: 16) {
-            Image(systemName: package.type == .cask ? "app.fill" : "terminal.fill")
+        let displayPackage = viewModel.detail?.package ?? package
+
+        return HStack(spacing: 16) {
+            Image(systemName: displayPackage.type == .cask ? "app.fill" : "terminal.fill")
                 .font(.system(size: 40))
-                .foregroundStyle(package.type == .cask ? .purple : .blue)
+                .foregroundStyle(displayPackage.type == .cask ? .purple : .blue)
                 .frame(width: 56, height: 56)
                 .background(
-                    (package.type == .cask ? Color.purple : .blue).opacity(0.1),
+                    (displayPackage.type == .cask ? Color.purple : .blue).opacity(0.1),
                     in: RoundedRectangle(cornerRadius: 12)
                 )
 
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 8) {
-                    Text(package.name)
+                    Text(displayPackage.name)
                         .font(.title)
                         .fontWeight(.bold)
 
-                    Text(package.type.displayName)
+                    Text(displayPackage.type.displayName)
                         .font(.caption.weight(.medium))
-                        .foregroundStyle(package.type == .cask ? .purple : .blue)
+                        .foregroundStyle(displayPackage.type == .cask ? .purple : .blue)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 3)
                         .background(
-                            (package.type == .cask ? Color.purple : .blue).opacity(0.12),
+                            (displayPackage.type == .cask ? Color.purple : .blue).opacity(0.12),
                             in: Capsule()
                         )
                 }
 
-                Text(package.description)
+                Text(displayPackage.description)
                     .font(.body)
                     .foregroundStyle(.secondary)
             }
@@ -108,13 +110,15 @@ struct PackageDetailView: View {
     // MARK: - Info
 
     private func infoSection(_ detail: BrewPackageDetail) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
+        let displayPackage = detail.package
+
+        return VStack(alignment: .leading, spacing: 10) {
             Text("信息")
                 .font(.headline)
 
             Grid(alignment: .leading, horizontalSpacing: 16, verticalSpacing: 8) {
-                infoRow("当前版本", package.currentVersion)
-                if let installed = package.installedVersions.first {
+                infoRow("当前版本", displayPackage.currentVersion)
+                if let installed = displayPackage.installedVersions.first {
                     infoRow("已安装", installed)
                 }
                 if let license = detail.license {
@@ -128,7 +132,7 @@ struct PackageDetailView: View {
                 }
             }
 
-            if let homepage = package.homepage, let url = URL(string: homepage) {
+            if let homepage = displayPackage.homepage, let url = URL(string: homepage) {
                 Link("🌐 官网", destination: url)
                     .font(.callout)
                     .padding(.top, 4)
@@ -199,18 +203,20 @@ struct PackageDetailView: View {
     // MARK: - Actions
 
     private func actionSection(_ detail: BrewPackageDetail) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
+        let displayPackage = detail.package
+
+        return VStack(alignment: .leading, spacing: 10) {
             Text("操作")
                 .font(.headline)
 
             HStack(spacing: 12) {
-                if package.isInstalled {
-                    if package.isOutdated {
+                if displayPackage.isInstalled {
+                    if displayPackage.isOutdated {
                         Button {
                             Task {
                                 await viewModel.performOperation(
                                     .upgrade,
-                                    package: package,
+                                    package: displayPackage,
                                     repository: appState.repository,
                                     appState: appState
                                 )
@@ -227,7 +233,7 @@ struct PackageDetailView: View {
                         Task {
                             await viewModel.performOperation(
                                 .uninstall,
-                                package: package,
+                                package: displayPackage,
                                 repository: appState.repository,
                                 appState: appState
                             )
@@ -242,7 +248,7 @@ struct PackageDetailView: View {
                         Task {
                             await viewModel.performOperation(
                                 .install,
-                                package: package,
+                                package: displayPackage,
                                 repository: appState.repository,
                                 appState: appState
                             )

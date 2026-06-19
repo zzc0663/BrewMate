@@ -3,12 +3,10 @@ import BrewKit
 
 /// 更新页面 — outdated 列表 + 全部更新 + 单个更新
 struct UpdatesView: View {
-    @Environment(AppState.self) private var appState
-    @State private var viewModel = UpdatesViewModel()
+    @EnvironmentObject private var appState: AppState
+    @StateObject private var viewModel = UpdatesViewModel()
 
     var body: some View {
-        @Bindable var state = appState
-
         VStack(spacing: 0) {
             if appState.isLoadingOutdated && appState.outdated.isEmpty {
                 LoadingOverlay("正在检查更新...")
@@ -57,8 +55,9 @@ struct UpdatesView: View {
                 }
 
                 // 列表
-                List(appState.outdated, selection: $state.selectedOutdated) { package in
+                List(appState.outdated, selection: $appState.selectedOutdated) { package in
                     outdatedRow(package)
+                        .tag(package)
                 }
                 .listStyle(.inset(alternatesRowBackgrounds: true))
             }

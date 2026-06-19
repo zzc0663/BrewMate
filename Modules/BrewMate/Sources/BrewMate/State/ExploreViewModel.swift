@@ -2,14 +2,14 @@ import SwiftUI
 import BrewKit
 
 /// 探索页面状态管理 — 搜索 + 安装
-@Observable @MainActor
-final class ExploreViewModel {
+@MainActor
+final class ExploreViewModel: ObservableObject {
     // MARK: - State
-    var searchText: String = ""
-    var results: [BrewPackage] = []
-    var isLoading: Bool = false
-    var errorMessage: String?
-    var operation: OperationStatus?
+    @Published var searchText: String = ""
+    @Published var results: [BrewPackage] = []
+    @Published var isLoading: Bool = false
+    @Published var errorMessage: String?
+    @Published var operation: OperationStatus?
 
     /// debounce Task
     private var searchTask: Task<Void, Never>?
@@ -69,6 +69,7 @@ final class ExploreViewModel {
     func install(_ package: BrewPackage, repository: PackageRepository, appState: AppState) async {
         let label = "Installing \(package.name)"
         operation = OperationStatus(label: label)
+        errorMessage = nil
 
         appState.appendLog("$ brew install \(package.name)", false)
 
@@ -93,7 +94,21 @@ final class ExploreViewModel {
             await repository.invalidateCache()
             await appState.loadInstalled()
             await appState.loadOutdated()
-            appState.appendLog("✅ \(package.name) 安装完成", false)
+
+            let installedPackages = appState.installed
+            let actuallyInstalled = installedPackages.contains {
+                $0.name == package.name && $0.type == package.type && $0.isInstalled
+            }
+
+            if actuallyInstalled {
+                appState.appendLog("✅ \(package.name) 安装完成", false)
+            } else {
+                throw BrewError.commandFailed(
+                    command: "install",
+                    exitCode: 1,
+                    stderr: "brew 命令结束后未在已安装列表中找到 \(package.name)"
+                )
+            }
         } catch {
             if !(error is CancellationError) {
                 errorMessage = error.localizedDescription

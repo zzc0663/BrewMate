@@ -2,13 +2,13 @@ import SwiftUI
 import BrewKit
 
 /// 更新页面状态管理
-@Observable @MainActor
-final class UpdatesViewModel {
+@MainActor
+final class UpdatesViewModel: ObservableObject {
     // MARK: - State
-    var isLoading: Bool = false
-    var errorMessage: String?
-    var upgradingAll: Bool = false
-    var operation: OperationStatus?
+    @Published var isLoading: Bool = false
+    @Published var errorMessage: String?
+    @Published var upgradingAll: Bool = false
+    @Published var operation: OperationStatus?
 
     // MARK: - Actions
 

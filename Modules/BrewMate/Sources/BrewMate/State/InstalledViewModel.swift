@@ -2,15 +2,15 @@ import SwiftUI
 import BrewKit
 
 /// 已安装页面状态管理
-@Observable @MainActor
-final class InstalledViewModel {
+@MainActor
+final class InstalledViewModel: ObservableObject {
     // MARK: - State
-    var packages: [BrewPackage] = []
-    var searchText: String = ""
-    var selectedType: PackageFilter = .all
-    var isLoading: Bool = false
-    var errorMessage: String?
-    var operation: OperationStatus?
+    @Published var packages: [BrewPackage] = []
+    @Published var searchText: String = ""
+    @Published var selectedType: PackageFilter = .all
+    @Published var isLoading: Bool = false
+    @Published var errorMessage: String?
+    @Published var operation: OperationStatus?
 
     // MARK: - Filter
     enum PackageFilter: String, CaseIterable {

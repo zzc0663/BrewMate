@@ -47,8 +47,18 @@ public actor BrewPackageRepository: @preconcurrency PackageRepository {
 
     public func search(query: String, type: PackageType?) async throws -> [BrewPackage] {
         // search 不缓存（结果依赖查询词）
-        let text = try await collectOutput(.search(query: query, type: type))
-        return SearchParser.parse(text, type: type)
+        if let type {
+            let text = try await collectOutput(.search(query: query, type: type))
+            return SearchParser.parse(text, type: type)
+        }
+
+        async let formulaText = collectOutput(.search(query: query, type: .formula))
+        async let caskText = collectOutput(.search(query: query, type: .cask))
+
+        let formulaResults = SearchParser.parse(try await formulaText, type: .formula)
+        let caskResults = SearchParser.parse(try await caskText, type: .cask)
+
+        return formulaResults + caskResults
     }
 
     public func info(for package: String, type: PackageType) async throws -> BrewPackageDetail {

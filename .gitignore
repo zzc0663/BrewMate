@@ -22,6 +22,7 @@ Package.resolved
 BrewMate.app/
 *.dmg
 *.ipa
+.cache/
 
 # IDE
 .idea/

@@ -3,15 +3,13 @@ import BrewKit
 
 /// 探索页面 — 搜索框 + Formula/Cask 分区结果
 struct ExploreView: View {
-    @Environment(AppState.self) private var appState
-    @State private var viewModel = ExploreViewModel()
+    @EnvironmentObject private var appState: AppState
+    @StateObject private var viewModel = ExploreViewModel()
 
     var body: some View {
-        @Bindable var vm = viewModel
-
         VStack(spacing: 0) {
             // 搜索框
-            searchBar(searchText: $vm.searchText)
+            searchBar(searchText: $viewModel.searchText)
 
             Divider()
 
@@ -37,14 +35,13 @@ struct ExploreView: View {
                     message: "没有找到 \"\(viewModel.searchText)\" 相关的包"
                 )
             } else {
-                List {
+                List(selection: $appState.selectedExplorePackage) {
                     // Formula 分区
                     if !viewModel.formulae.isEmpty {
                         Section("Formula (\(viewModel.formulae.count))") {
                             ForEach(viewModel.formulae) { package in
-                                NavigationLink(value: package) {
-                                    PackageRowView(package)
-                                }
+                                PackageRowView(package)
+                                    .tag(package)
                             }
                         }
                     }
@@ -53,9 +50,8 @@ struct ExploreView: View {
                     if !viewModel.casks.isEmpty {
                         Section("Cask (\(viewModel.casks.count))") {
                             ForEach(viewModel.casks) { package in
-                                NavigationLink(value: package) {
-                                    PackageRowView(package)
-                                }
+                                PackageRowView(package)
+                                    .tag(package)
                             }
                         }
                     }
